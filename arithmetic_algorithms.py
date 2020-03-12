@@ -50,3 +50,46 @@ def generalized_addition(*inputs):
 def multiplication(input1, input2):
     list_of_inputs = [input1 for x in range(input2)]
     return generalized_addition(*list_of_inputs)
+
+def division(a, b):
+    '''division is just repeated subtraction - need to write this for integers below and convert to iterative form'''
+    if a < b:
+        return 0
+    else:
+        return 1 + division(a-b, b)
+
+'''The above algorithms all compute functions that map N x N --> N.
+   However, in grade school, we don't restrict ourselves to such functions.
+   Instead, we also consider more general functions that map Z x Z --> Z, 
+   where Z is the set of integers. 
+
+   The following recursive algorithms compute addition and subtraction in this more general context:'''
+
+def add_integers(x,y):
+    if y > 0:
+        return add_integers(x, y-1) + 1
+    elif y < 0:
+        return add_integers(x, y+1) - 1
+    else:
+        return x
+
+
+def subtract_integers(x,y):
+    if y > 0:
+        return subtract_integers(x, y-1) - 1
+    elif y < 0:
+        return subtract_integers(x, y+1) + 1
+    else:
+        return x
+
+def multiply_integers(x, y):
+    if x == 0 or y == 0:
+        return 0
+
+    elif y < 0:
+        return -x + multiply_integers(x, y + 1)
+
+    else: 
+        return x + multiply_integers(x, y - 1)
+
+'''todo: convert the new recursive algorithms into iterative form'''
