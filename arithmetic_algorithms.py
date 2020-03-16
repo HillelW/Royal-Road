@@ -277,10 +277,16 @@ def long_division(numerator, denominator):
 # for digit in islice(long_division(1, 3), 10):
 #     print(digit)
 
-def long_multiplication(multiplicand, multiplier):
+def long_integer_multiplication(x, y):
     '''faster than the repeated addition method, just like long division is faster than the
        repeated subtraction method.'''
-    pass
+    string_x = str(x)
+    string_y = str(y)
+    result = 0
+    for i, x in enumerate(string_x[::-1]):
+        for j, y in enumerate(string_y[::-1]):
+            result += (10 ** (i + j)) * int(x) * int(y)
+    return result
 
 '''The above algorithms all compute functions that map N x N --> N.
    However, in grade school, we don't restrict ourselves to such functions.
