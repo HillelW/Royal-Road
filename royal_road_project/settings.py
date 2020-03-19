@@ -43,7 +43,7 @@ ROOT_URLCONF = 'royal_road_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR, 'number_line/templates'],
+        'DIRS': [BASE_DIR, 'number_line/templates','python_interpreter/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
