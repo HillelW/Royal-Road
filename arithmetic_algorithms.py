@@ -288,6 +288,12 @@ def long_integer_multiplication(x, y):
             result += (10 ** (i + j)) * int(x) * int(y)
     return result
 
+def long_decimal_multiplication(x, y):
+    # ignore decimal point in each number, at it to the result at the end
+    # use logic from long_division to track where the decimal point should go.
+    pass
+
+
 '''The above algorithms all compute functions that map N x N --> N.
    However, in grade school, we don't restrict ourselves to such functions.
    Instead, we also consider more general functions that map Z x Z --> Z, 
