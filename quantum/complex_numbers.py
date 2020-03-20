@@ -4,7 +4,7 @@ from functools import reduce
 
 def linear_combination(list_of_vectors, list_of_scalars):
     '''given several lists of Complex objects, or several ComplexVectors, and a list of scalars,
-       returns the corresponding linear combination
+       returns the corresponding linear combination as a ComplexVector
     
       v1 = [Complex(-1,0), Complex(0,7), Complex(2,0)]
       v2 = [Complex(0,0), Complex(2,0), Complex(4,0)]
@@ -31,7 +31,7 @@ def linear_combination(list_of_vectors, list_of_scalars):
     answer= []
     for i in range(length):
         answer.append(reduce(Complex.__add__, vectors_to_add[i]))
-    return answer
+    return ComplexVector(answer)
 
 class Complex():
     '''represents a complex number'''
@@ -97,6 +97,25 @@ class ComplexVector():
     def __init__(self, list_of_complex_numbers):
         self.list_of_complex_numbers = list_of_complex_numbers
         self.current_index = 0
+    
+    def hermitian_conjugate(self):
+        '''returns the hermitian conjugate of a ComplexVector'''
+        return ComplexVector([v.complex_conjugate() for v in self])
+
+    def inner_product(self, other):
+        sum_so_far = Complex(0,0)
+        bra = self.hermitian_conjugate()
+        product_pairs = zip(bra, other)
+        for z1, z2 in product_pairs:
+            sum_so_far += z1 * z2
+        return sum_so_far
+
+    def norm(self):
+        return math.sqrt(self.inner_product(self).x)
+
+    def normalize(self):
+        norm = self.norm()
+        return self.scalar_multiplication(1/norm)
 
     def __add__(self, other):
         '''returns the sum of two complex vectors'''
@@ -118,11 +137,8 @@ class ComplexVector():
         pairs = zip(self, other)
         return ComplexVector([u / v for (u, v) in pairs])
 
-    def inner_product(self, other):
-        pass
-
     def scalar_multiplication(self, scalar):
-        '''returns the component-wise scalar multiplication of two complex vectors'''
+        '''returns the component-wise scalar multiplication of a complex vector with a scalar'''
         return ComplexVector([u.scalar_multiplication(scalar) for u in self.list_of_complex_numbers])
     
     def complex_conjugate(self):
