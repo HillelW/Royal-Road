@@ -2,6 +2,13 @@ import math
 from functools import reduce
 
 
+def is_orthonormal(list_of_vectors):
+    '''given a list of ComplexVectors, returns True if that set is orthonormal, False otherwise'''
+    # if not all normalized, return False
+    # if not all orthogonal, return False
+    # otherwise, return True
+    pass
+
 def linear_combination(list_of_vectors, list_of_scalars):
     '''given several lists of Complex objects, or several ComplexVectors, and a list of scalars,
        returns the corresponding linear combination as a ComplexVector
