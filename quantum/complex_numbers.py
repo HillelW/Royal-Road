@@ -1,17 +1,36 @@
 import math
 from functools import reduce
+from itertools import combinations
 
 
-def is_orthonormal(list_of_vectors):
-    '''given a list of ComplexVectors, returns True if that set is orthonormal, False otherwise'''
-    # if not all normalized, return False
-    # if not all orthogonal, return False
-    # otherwise, return True
+'''a module to implement basic ideas in quantum computing'''
+
+### working on a recursive implementation here
+def gram_schmidt(list_of_vectors):
+    '''given a basis of ComplexVectors, returns an orthonormal basis'''
     pass
+
+def are_normalized(list_of_vectors):
+    '''given a list of ComplexVectors, returns True if that set is normal, False otherwise'''
+    return all([v.is_normalized() for v in list_of_vectors])
+
+def are_orthogonal(list_of_vectors):
+    '''given a list of ComplexVectors, returns True if that set is orthogonal, False otherwise'''
+    pairs = [pair for pair in combinations(list_of_vectors, 2)]
+    return all([v1.is_orthogonal_to(v2) for v1, v2 in pairs])
+
+def are_orthonormal(list_of_vectors):
+    '''given a list of ComplexVectors, returns True if that set is orthonormal, False otherwise:
+       
+       v1 = ComplexVector([Complex(1/math.sqrt(2), 0), Complex(1/math.sqrt(2), 0)])
+       v2 = ComplexVector([Complex(1/math.sqrt(2), 0), Complex(-1/math.sqrt(2), 0)])
+       are_orthonormal([v1, v2]) # true
+    '''
+    return are_normalized(list_of_vectors) and are_orthogonal(list_of_vectors)
 
 def linear_combination(list_of_vectors, list_of_scalars):
     '''given several lists of Complex objects, or several ComplexVectors, and a list of scalars,
-       returns the corresponding linear combination as a ComplexVector
+       returns the corresponding linear combination as a ComplexVector:
     
       v1 = [Complex(-1,0), Complex(0,7), Complex(2,0)]
       v2 = [Complex(0,0), Complex(2,0), Complex(4,0)]
@@ -41,7 +60,10 @@ def linear_combination(list_of_vectors, list_of_scalars):
     return ComplexVector(answer)
 
 class Complex():
-    '''represents a complex number'''
+    '''represents a complex number:
+    
+       c = Complex(1, 2)
+    '''
     def __init__(self, x, y=0.0):
         self.x = x
         self.y = y
@@ -110,6 +132,7 @@ class ComplexVector():
         return ComplexVector([v.complex_conjugate() for v in self])
 
     def inner_product(self, other):
+        '''returns the inner product of this vector with some other vector'''
         sum_so_far = Complex(0,0)
         bra = self.hermitian_conjugate()
         product_pairs = zip(bra, other)
@@ -118,11 +141,28 @@ class ComplexVector():
         return sum_so_far
 
     def norm(self):
+        '''returns the norm of this vector'''
         return math.sqrt(self.inner_product(self).x)
 
     def normalize(self):
+        '''returns a normalized version of this vector'''
         norm = self.norm()
         return self.scalar_multiplication(1/norm)
+
+    def is_normalized(self, epsilon=0.1):
+        '''returns True if this vector is normalized, False otherwise'''
+        return abs(self.norm() - self.normalize().norm()) < epsilon
+
+    def is_orthogonal_to(self, other, epsilon=0.1):
+        '''returns True if this vector is orthogonal to the other vector, False otherwise'''
+        return abs(self.inner_product(other).modulus()) < epsilon
+
+
+    ### working on this
+    def proj(self, other):
+        '''returns the projection of this vector onto some other vector'''
+        unit_vector = other.normalize()
+        return self.inner_product(unit_vector).scalar_multiplication(unit_vector)
 
     def __add__(self, other):
         '''returns the sum of two complex vectors'''
