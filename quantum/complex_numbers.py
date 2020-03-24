@@ -5,10 +5,31 @@ from itertools import combinations
 
 '''a module to implement basic ideas in quantum computing'''
 
-### working on a recursive implementation here
+def sum_all(list_of_complex_vectors):
+    '''returns the sum of a list of ComplexVectors'''
+    return reduce((lambda x, y: x + y), list_of_complex_vectors)
+
 def gram_schmidt(list_of_vectors):
     '''given a basis of ComplexVectors, returns an orthonormal basis'''
-    pass
+    if len(list_of_vectors) == 0:
+        return []
+
+    if len(list_of_vectors) == 1:
+        return [v.normalize() for v in list_of_vectors]
+
+    # grab the last vector from the list of vectors
+    u = list_of_vectors[-1]
+
+    # orthonormalize the rest of the vectors
+    basis = gram_schmidt(list_of_vectors[0: -1])
+
+    # compute the last orthonormal basis vector
+    w = (u - sum_all(ComplexVector(u.projection_onto(v)  for v in basis)))
+
+    # append this orthonormal vector to the rest of the orthonormal basis
+    basis.append(w.normalize())
+
+    return basis
 
 def are_normalized(list_of_vectors):
     '''given a list of ComplexVectors, returns True if that set is normal, False otherwise'''
@@ -70,7 +91,11 @@ class Complex():
      
     def __add__(self, other):
         '''returns the sum of two complex numbers'''
-        return Complex(self.x + other.x, self.y + other.y)
+        return Complex(other.x + self.x, other.y + self.y)
+
+    def sum_all(self, list_of_complex_numbers):
+        '''returns the result of summing this complex number with a list of complex numbers'''
+        return reduce((lambda x, y: x + y), list_of_complex_numbers)
 
     def __sub__(self, other):
         '''returns the result of subtracting this complex number from antoher complex number'''
@@ -157,17 +182,19 @@ class ComplexVector():
         '''returns True if this vector is orthogonal to the other vector, False otherwise'''
         return abs(self.inner_product(other).modulus()) < epsilon
 
-
-    ### working on this
-    def proj(self, other):
+    def projection_onto(self, other):
         '''returns the projection of this vector onto some other vector'''
         unit_vector = other.normalize()
-        return self.inner_product(unit_vector).scalar_multiplication(unit_vector)
+        return unit_vector.scalar_multiplication(self.inner_product(unit_vector))
 
     def __add__(self, other):
         '''returns the sum of two complex vectors'''
         pairs = zip(self, other)
         return ComplexVector([u + v for (u, v) in pairs])
+
+    def sum_all(self, list_of_complex_vectors):
+        '''returns the result of summing this ComplexVector with a list of ComplexVectors'''
+        return reduce((lambda x, y: x + y), list_of_complex_vectors)
 
     def __sub__(self, other):
         '''returns the result of subtracting this complex vector from antoher complex vector'''
@@ -186,6 +213,8 @@ class ComplexVector():
 
     def scalar_multiplication(self, scalar):
         '''returns the component-wise scalar multiplication of a complex vector with a scalar'''
+        if type(scalar) == Complex:
+            return ComplexVector([u * scalar for u in self.list_of_complex_numbers]) 
         return ComplexVector([u.scalar_multiplication(scalar) for u in self.list_of_complex_numbers])
     
     def complex_conjugate(self):

@@ -113,4 +113,4 @@ expression = 1 + (1 / inp)
 sym.limit(expression, inp, sym.oo) # 1
 
 '''The fact that two sequences with different domains can have the same limit 
-    will be importnat when we consider the derivative of a real-valued function of a real variable.'''
+   will be importnat when we consider the derivative of a real-valued function of a real variable.'''
