@@ -244,3 +244,4 @@ class ComplexVector():
     def __repr__(self):
         list_of_strings = [repr(c) for c in self.list_of_complex_numbers]
         return '[' + ','.join(list_of_strings) + ']'
+
